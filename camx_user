@@ -1,0 +1,274 @@
+# CamX_User (CU)
+# User defined variables file
+CVER=2
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#### INSTRUCTIONS ####
+# Place this file at the root of your internal storage
+# CU will hook your values at first flash if the file already exists on sdcard
+# If file doesn't exist - first flash will create the file, you'll be able to set it
+# and reflash again for values to hook
+#
+# Reflash is mandatory every time you change values in this file starting from second flash!
+#
+# Controls existance highly depends on QC platform & OEM
+# so you might consider all settings as experimental
+# it's hard to predict which exists and which doesn't.
+# I checked sd845/855/865/888 sources could get, so
+# can be confident only about these. But even on those
+# OEM might not use certain control. You can find stock
+# file at /vendor/etc/camera/camxoverridesettings.txt but
+# it won't have full list of possible controls. Feel free
+# to experiment
+#
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+### Experimental Settings:
+
+# Force Sensor Mode
+#     If you know any specific sensor mode index can set here
+#     Will interfere with selected xiaomi devices for which 
+#     installer suggests use of full resolution via vol keys
+#     index 0 - full resolution
+#     Number of mode indexes will depend on certain oem
+#     ! DON'T set anything to leave stock setting !
+SMI=
+
+# Per Frame Control
+#     Supposed to be controlled by camera2api, but exists for
+#     ISP too
+#     ! Might lead to black viewfinder on some devices !
+#     FALSE to disable
+#     TRUE to enable
+#     ! DON'T set anything to leave stock setting !
+PF=
+
+# Number of HAL worker threads
+#     The number of threads to use in the device's threadpool
+#     Stock value is 3
+#     ! DON'T set anything to leave stock setting !
+HWT=
+
+# Number Of CHI Threads
+#     CHI HAL threads number
+#     Stock value is 6
+#     ! DON'T set anything to leave stock setting !
+CT=
+
+# Minimum reprocess width exposed to frameworks
+#     Cap minimum reprocess width of input dimension supported by HAL
+#     By default all sizes upto 5MP(2592x1944) will be advertised
+#     Default value of this is 2592
+#     ! DON'T set anything to leave stock setting !
+MRW=
+
+# Minimum reprocess height exposed to frameworks
+#     Cap minimum reprocess height of input dimension supported by HAL
+#     By default all sizes upto 5MP(2592x1944) will be advertised
+#     Default value of this is 1944
+#     ! DON'T set anything to leave stock setting !
+MRH=
+
+# ADRC
+#     Enable/Disable automatic dynamic range control
+#     FALSE to disable
+#     TRUE to enable
+#     ! DON'T set anything to leave stock setting !
+ADRC=
+
+# Force Max FPS
+#     Do not pick a sensor mode above forceMaxFPS
+#     Primarily used for debugging
+#     Set to a huge number to disable
+#     Stock value is: 100000
+#     ! DON'T set anything to leave stock setting !
+FMF=
+
+# Default Max FPS
+#     Set the default fps for sensor mode pick
+#     ! Might not work with previous prop !
+#     Stock value is: 30
+#     ! DON'T set anything to leave stock setting !
+DF=
+
+# Enable manual AF
+#     Focus debugging prop
+#     Possible values to set:
+#     Disabled (Disable Manual Lens Movement)
+#     DAC (Enable Control via DAC)
+#     Logical (Enable Control via Logical Position)
+#     Stock value is: Disabled
+#     ! DON'T set anything to leave stock setting !
+MAF=
+
+# Enable extended timeout for Long Exposure
+#     FALSE to disable
+#     TRUE to enable
+#     ! DON'T set anything to leave stock setting !
+ELE=
+
+# High Janktion Auto Focus
+#     Not sure what it actually is
+#     FALSE to disable
+#     TRUE to enable
+#     ! DON'T set anything to leave stock setting !
+HJ=
+
+# Sensor FPS
+#     Sensor fps mode (non hfr)
+#     Set desired value as SF=xxx where xxx is your fps value, for
+#     example 120
+#     ! DON'T set anything to leave stock setting !
+SF=
+
+# Enable AF Bracketing
+#     0 to disable
+#     1 to enable
+#     ! DON'T set anything to leave stock setting !
+EFB=
+
+# Enable AI
+#     Enable/Disable AI Camera 
+#     for camera preview and snapshot
+#     0 to disable
+#     1 to enable
+#     ! DON'T set anything to leave stock setting !
+AI=
+
+# Enable Sensor Remosaic
+#     Sensor Remosaic
+#     0 to disable
+#     1 to enable
+#     ! DON'T set anything to leave stock setting !
+ESR=
+
+# Enable Resolution Upscale
+#     Software upscale
+#     0 to disable
+#     1 to enable
+#     ! DON'T set anything to leave stock setting !
+UPS=
+
+# Exposure Gain
+#     Floating point exposure gain 
+#     Set desired value as EG=xx where xx is your value, for
+#     example 1.0
+#     ! DON'T set anything to leave stock setting !
+EG=
+
+# Manual Exposure Type
+#     FALSE to disable
+#     TRUE to enable
+#     ! DON'T set anything to leave stock setting !
+ME=
+
+# Exposure Time
+#     Value of Exposure Time in nanoseconds
+#     Set desired value as ET=xxx where xxx is your value, for
+#     example 22000000
+#     ! DON'T set anything to leave stock setting !
+ET=
+
+# Max Digital Zoom
+#     Maximum digital zoom ratio
+#     Set desired value as ET=xxx where xxx is your value, for
+#     example 50.0
+#     ! DON'T set anything to leave stock setting !
+MZ=
+
+# XIAOMI Staggered Super Night
+#     Probably staggered HDR in Night mode for xiaomi stock camera
+#     0 to disable
+#     1 to enable
+#     ! DON'T set anything to leave stock setting !
+XS=
+
+## Short & Middle expo time and gain
+## These settings might exist starting
+## with 8250 (qc865) platform
+##
+## Short Gain
+##     Expo bracketing / HDR mode
+##     short gain float
+SG=
+## Short Exposure Time
+##     Expo bracketing / HDR mode
+##     short exposure time in nanoseconds
+ST=
+## Middle Gain
+##     Expo bracketing / HDR mode
+##     middle gain float
+MG=
+## Middle Exposure Time
+##     Expo bracketing / HDR mode
+##     middle exposure time in nanoseconds
+MT=
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+## Manual WB Settings:
+## Enable Manual WB
+##     0 to disable
+##     1 to enable
+##     ! DON'T put anything to leave stock setting !
+EMW=
+## White Balance Red channel
+##     Value of white balance R gain
+##     Qualcomm CHI source has it set to 1.700643 (unknown device)
+##     Your OEM device value should be in EEPROM data
+##     Even if you don't know your value, you
+##     still can experiment
+WBR=
+## White Balance Green channel
+##     Value of white balance G gain
+##     Qualcomm CHI source has it set to 1.0 (unknown device)
+##     Your OEM device value should be in EEPROM data
+##     Even if you don't know your value, you
+##     still can experiment
+WBG=
+## White Balance Blue channel
+##     Value of white balance B gain
+##     Qualcomm CHI source has it set to 2.054097 (unknown device)
+##     Your OEM device value should be in EEPROM data
+##     Even if you don't know your value, you
+##     still can experiment
+WBB=
+## White Balance Temperature
+##     Desire wb temperature value
+##     Qualcomm CHI source has it set to 4100 (unknown device)
+WBT=
+##
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+## EIS Settings:
+##
+## Enable EIS V2
+##     0 for Disable
+##     1 for Operation Mode match (used by camera app)
+##     2 for force enable
+##     CHI source likely set to 1
+EV2=
+## EIS V2 Frame Delay
+##     Frame delay during camera pan
+##     CHI source set to 0
+EV2FD=
+## EIS V2 Margin
+##     EIS V2 Margin
+##     Frame margin in v2 mode
+##     CHI source set to 0.2
+EV2M=
+##
+##
+## Enable EIS V3
+##     0 for Disable
+##     1 for Operation Mode match (used by camera app)
+##     2 for force enable
+##     CHI source likely set to 1
+EV3=
+## EIS V3 Frame Delay
+##     Frame delay during camera pan
+##     CHI source set to 15
+EV3FD=
+## EIS V3 Margin
+##     EIS V3 Margin
+##     Frame margin in v3 mode
+##     CHI source set to 0.2
+EV3M=
+##
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
