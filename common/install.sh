@@ -1,4 +1,4 @@
-COS="$(find /vendor -type f -name "camxoverridesettings*.txt")"
+COS="$(find $PARTITIONS -type f -name "camxoverridesettings*.txt")"
 NOP="$(find /data/adb/modules -type f -name "camxoverridesettings*.txt")"
 [ -f "/system/vendor/build.prop" ] && BUILDS="/system/build.prop /system/vendor/build.prop" || BUILDS="/system/build.prop"
 QCP=$(grep -E "ro.board.platform=apq.*|ro.board.platform=msm.*|ro.board.platform=sdm.*" $BUILDS)
