@@ -1,0 +1,2 @@
+Camxoverride provides a user controllable layer for camera HAL on qualcomm devices.
+It consists of a list of props that are read by HAL and applied for ISP or any sort of qc/oem postpropcessing pipeline. Oem file is normally heavier than one that ships with BSP, so one of the goals of this project is to collect more props, test them out with a wide varety of devices and add back to module with its future updates. Prop control existance highly depends on platform (something new from 888 soc doesn't exist for 865) & oem that made particular device.
