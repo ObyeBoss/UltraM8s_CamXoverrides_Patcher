@@ -15,6 +15,7 @@
 #MAXAPI=25
 #DYNLIB=true
 DEBUG=true
+PARTITIONS="/system /system_ext /vendor /odm /my_product /mi_ext"
 
 ##########################################################################################
 # Replace list

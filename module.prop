@@ -1,7 +1,7 @@
 id=camx_p
 name=UltraM8's CamXoverrides Patcher [Experimental]
-version=v1.4
-versionCode=140
+version=v1.5
+versionCode=150
 author=UltraM8
 description=Qualcomm Camera HAL config patcher to experiment with output quality for photo & video capabilities.
 support=https://t.me/ucvm_gcam
