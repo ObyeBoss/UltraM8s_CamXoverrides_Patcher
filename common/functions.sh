@@ -4,6 +4,13 @@
 #
 ##########################################################################################
 
+require_new_ksu() {
+  ui_print "**********************************"
+  ui_print " Please install KernelSU v0.6.6+! "
+  ui_print "**********************************"
+  exit 1
+}
+
 umount_mirrors() {
   [ -d $ORIGDIR ] || return 0
   for i in $ORIGDIR/*; do
@@ -88,9 +95,16 @@ cp_ch() {
 
 install_script() {
   case "$1" in
-    -l) shift; local INPATH=$NVBASE/service.d;;
-    -p) shift; local INPATH=$NVBASE/post-fs-data.d;;
-    *) local INPATH=$NVBASE/service.d;;
+    -b) shift; 
+        if $KSU; then
+          local INPATH=$NVBASE/boot-completed.d
+        else
+          local INPATH=$SERVICED
+          sed -i -e '1i (\nwhile [ "$(getprop sys.boot_completed)" != "1" ]; do\n  sleep 1\ndone\nsleep 3\n' -e '$a)&' $1
+        fi;;
+    -l) shift; local INPATH=$SERVICED;;
+    -p) shift; local INPATH=$POSTFSDATAD;;
+    *) local INPATH=$SERVICED;;
   esac
   [ "$(grep "#!/system/bin/sh" $1)" ] || sed -i "1i #!/system/bin/sh" $1
   local i; for i in "MODPATH" "LIBDIR" "MODID" "INFO" "MODDIR"; do
@@ -102,6 +116,7 @@ install_script() {
   done
   case $1 in
     "$MODPATH/post-fs-data.sh"|"$MODPATH/service.sh"|"$MODPATH/uninstall.sh") sed -i "s|^MODPATH=.*|MODPATH=\$MODDIR|" $1;; # MODPATH=MODDIR for these scripts (located in module directory)
+    "$MODPATH/boot-completed.sh") $KSU && sed -i "s|^MODPATH=.*|MODPATH=\$MODDIR|" $1 || { cp_ch -n $1 $INPATH/$MODID-$(basename $1) 0755; rm -f $MODPATH/boot-completed.sh; };;
     *) cp_ch -n $1 $INPATH/$(basename $1) 0755;;
   esac
 }
@@ -124,10 +139,10 @@ mount_mirrors() {
   else
     mount -o ro /system $ORIGDIR/system
   fi
-  for i in vendor $PARTITIONS; do
-    [ ! -d /$i -o -d $ORIGDIR/$i ] && continue
-    mkdir -p $ORIGDIR/$i
-    mount -o ro /$i $ORIGDIR/$i
+  for i in /vendor $PARTITIONS; do
+    [ ! -d $i -o -d $ORIGDIR$i ] && continue
+    mkdir -p $ORIGDIR$i
+    mount -o ro $i $ORIGDIR$i
   done
 }
 
@@ -141,15 +156,18 @@ ui_print " "
 [ -z $MINAPI ] || { [ $API -lt $MINAPI ] && abort "! Your system API of $API is less than the minimum api of $MINAPI! Aborting!"; }
 [ -z $MAXAPI ] || { [ $API -gt $MAXAPI ] && abort "! Your system API of $API is greater than the maximum api of $MAXAPI! Aborting!"; }
 
+# Min KSU v0.6.6
+[ -z $KSU ] && KSU=false
+$KSU && { [ $KSU_VER_CODE -lt 11184 ] && require_new_ksu; }
 
 # Start debug
-[ -z $KSU ] && KSU=false || exec 2>/sdcard/Download/$MODID-debug.log
 set -x
 
 # Set variables
 [ -z $ARCH32 ] && ARCH32="$(echo $ABI32 | cut -c-3)"
 [ $API -lt 26 ] && DYNLIB=false
 [ -z $DYNLIB ] && DYNLIB=false
+[ -z $PARTOVER ] && PARTOVER=false
 INFO=$NVBASE/modules/.$MODID-files
 if $KSU; then
   MAGISKTMP="/mnt"
@@ -170,10 +188,10 @@ else
   LIBDIR=/system
 fi
 # Detect extra partition compatibility (KernelSU or Magisk Delta)
+EXTRAPART=false
 if $KSU || [ "$(echo $MAGISK_VER | awk -F- '{ print $NF}')" == "delta" ]; then
   EXTRAPART=true
-else
-  EXTRAPART=false
+elif ! $PARTOVER; then
   unset PARTITIONS
 fi
 
@@ -232,6 +250,7 @@ ui_print "   Installing for $ARCH SDK $API device..."
 for i in $(find $MODPATH -type f -name "*.sh" -o -name "*.prop" -o -name "*.rule"); do
   [ -f $i ] && { sed -i -e "/^#/d" -e "/^ *$/d" $i; [ "$(tail -1 $i)" ] && echo "" >> $i; } || continue
   case $i in
+    "$MODPATH/boot-completed.sh") install_script -b $i;;
     "$MODPATH/service.sh") install_script -l $i;;
     "$MODPATH/post-fs-data.sh") install_script -p $i;;
     "$MODPATH/uninstall.sh") if [ -s $INFO ] || [ "$(head -n1 $MODPATH/uninstall.sh)" != "# Don't modify anything after this" ]; then                          
@@ -268,7 +287,7 @@ fi
 ui_print " "
 ui_print "- Setting Permissions"
 set_perm_recursive $MODPATH 0 0 0755 0644
-for i in /system/vendor /vendor /system/vendor/app /vendor/app /system/vendor/etc /vendor/etc /system/odm/etc /system/vendor/odm/etc /vendor/odm/etc /system/vendor/overlay /vendor/overlay; do
+for i in /system/vendor /vendor /system/vendor/app /vendor/app /system/vendor/etc /vendor/etc /system/odm/etc /odm/etc /system/vendor/odm/etc /vendor/odm/etc /system/vendor/overlay /vendor/overlay; do
   if [ -d "$MODPATH$i" ] && [ ! -L "$MODPATH$i" ]; then
     case $i in
       *"/vendor") set_perm_recursive $MODPATH$i 0 0 0755 0644 u:object_r:vendor_file:s0;;
