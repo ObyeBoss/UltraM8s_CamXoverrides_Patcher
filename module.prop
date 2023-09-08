@@ -1,7 +1,7 @@
 id=camx_p
 name=UltraM8's CamXoverrides Patcher [Experimental]
 version=v1.5
-versionCode=152
+versionCode=153
 author=UltraM8
 description=Qualcomm Camera HAL config patcher to experiment with output quality for photo & video capabilities.
 updateJson=https://raw.githubusercontent.com/ObyeBoss/UltraM8s_CamXoverrides_Patcher/main/update.json

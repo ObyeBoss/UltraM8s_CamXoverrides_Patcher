@@ -74,7 +74,7 @@ ui_print " "
 sleep 2
 for OCO in ${COS}; do
 CO="$MODPATH$(echo $OCO | sed "s|^/vendor|/system/vendor|g")"
-$KSU && CO="$(echo $CO | sed -e "s|^/odm|/system/odm|g" -e "s|^/my_product|/system/my_product|g")"
+$KSU && CO="$(echo $CO | sed -e "s|$MODPATH/odm|$MODPATH/system/odm|g" -e "s|$MODPATH/my_product|$MODPATH/system/my_product|g")"
 cp_ch $ORIGDIR$OCO $CO
 sed -i 's/\t/  /g' $CO
 
